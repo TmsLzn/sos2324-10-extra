@@ -27,7 +27,6 @@
 		getChart(datos);
 	});
 
-
 	async function getInitialData() {
 		try {
 			let response = await fetch(API_TLR + '/loadInitialData', {
@@ -71,7 +70,6 @@
 		}
 	}
 
-
 	async function getInitialGDP() {
 		try {
 			let response = await fetch(API_MRF + '/loadInitialData', {
@@ -110,7 +108,6 @@
 			errorMsg = e;
 		}
 	}
-
 
 	//Cargar todos los datos
 	async function loadAllData() {
@@ -164,7 +161,6 @@
 		});
 	}
 
-
 	//Creamos función que unifique datos
 	function unificarBD(data1, data2) {
 		// Crear conjuntos de países únicos para cada conjunto de datos
@@ -190,7 +186,7 @@
 	function getEstadisticas(datos) {
 		const countryData = datos.reduce((acc, curr) => {
 			if (!acc[curr.geo]) {
-				acc[curr.geo] = { pib: 0, deathsInFlights: 0, volgdp: 0, road_deaths_per_million_inhabitants:0}; // Incluir el volgdp
+				acc[curr.geo] = { pib: 0, deathsInFlights: 0, volgdp: 0, road_deaths_per_million_inhabitants: 0 }; // Incluir el volgdp
 			}
 			// Acumulación de PIB si tiene el atributo "frequency"
 			if ('frequency' in curr) {
@@ -200,12 +196,11 @@
 			if (curr.flights_passangers) {
 				acc[curr.geo].deathsInFlights += curr.flights_passangers;
 			}
-			
 			return acc;
 		}, {});
 
 		const sortedData = Object.entries(countryData).map(
-			([country, { pib, deathsInFlights, volgdp ,road_deaths_per_million_inhabitants}]) => ({
+			([country, { pib, deathsInFlights, volgdp, road_deaths_per_million_inhabitants }]) => ({
 				country: country,
 				pib: pib,
 				deathsInFlights: deathsInFlights,
@@ -231,60 +226,89 @@
 
 	// Creamos el gráfico
 	function getChart(datos) {
-		Highcharts.chart('graph', {
-			chart: {
-				type: 'area'
-			},
-			title: {
-				text: 'PIB Acumulado vs Muertes en Aviones' 
-			},
-			xAxis: {
-				categories: datos.categories,
-				crosshair: true
-			},
-			yAxis: [
-				{
-					min: 0,
-					title: {
-						text: 'PIB Acumulado'
-					}
-				},
-				{
-					min: 0,
-					title: {
-						text: 'Muertes en Aviones'
-					},
-					opposite: true
-				}
-			],
-			tooltip: {
-				shared: true
-			},
-			series: [
-				{
-					name: 'PIB Acumulado',
-					data: datos.series[0].data,
-					tooltip: {
-						valueSuffix: ' unidades'
-					}
-				},
-				{
-					name: 'Muertes en Aviones',
-					data: datos.series[1].data,
-					yAxis: 1,
-					tooltip: {
-						valueSuffix: ' personas'
-					}
-				}
-			]
-		});
+		const margin = { top: 20, right: 30, bottom: 30, left: 70 };
+		const width = 800 - margin.left - margin.right;
+		const height = 400 - margin.top - margin.bottom;
+
+		const svg = d3.select("#graph")
+			.append("svg")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+			.append("g")
+			.attr("transform", `translate(${margin.left},${margin.top})`);
+
+		const x = d3.scaleBand()
+			.domain(datos.categories)
+			.range([0, width])
+			.padding(0.1);
+
+		const y0 = d3.scaleLinear()
+			.domain([0, d3.max(datos.series[0].data)])
+			.range([height, 0]);
+
+		const y1 = d3.scaleLinear()
+			.domain([0, d3.max(datos.series[1].data)])
+			.range([height, 0]);
+
+		const color = d3.scaleOrdinal()
+			.domain(["PIB Acumulado", "Muertes en Aviones"])
+			.range(["#1f77b4", "#ff7f0e"]);
+
+		svg.append("g")
+			.attr("transform", `translate(0, ${height})`)
+			.call(d3.axisBottom(x));
+
+		svg.append("g")
+			.call(d3.axisLeft(y0).tickFormat(d => `${d}`));
+
+		svg.append("g")
+			.call(d3.axisRight(y1).tickFormat(d => `${d}`))
+			.attr("transform", `translate(${width}, 0)`);
+
+		const bar = svg.selectAll(".bar")
+			.data(datos.categories)
+			.enter()
+			.append("g")
+			.attr("class", "bar")
+			.attr("transform", d => `translate(${x(d)},0)`);
+
+		bar.append("rect")
+			.attr("y", d => y0(datos.series[0].data[datos.categories.indexOf(d)]))
+			.attr("height", d => height - y0(datos.series[0].data[datos.categories.indexOf(d)]))
+			.attr("width", x.bandwidth() / 2)
+			.attr("fill", color("PIB Acumulado"));
+
+		bar.append("rect")
+			.attr("y", d => y1(datos.series[1].data[datos.categories.indexOf(d)]))
+			.attr("height", d => height - y1(datos.series[1].data[datos.categories.indexOf(d)]))
+			.attr("width", x.bandwidth() / 2)
+			.attr("transform", `translate(${x.bandwidth() / 2}, 0)`)
+			.attr("fill", color("Muertes en Aviones"));
+
+		svg.append("text")
+			.attr("x", width /2)
+			.attr("y", margin.bottom /100)
+			.style("text-anchor", "middle")
+			.text("PIB Acumulado vs Muertes en Aviones");
+
+		svg.append("text")
+			.attr("transform", "rotate(-90)")
+			.attr("y", 0 - margin.left)
+			.attr("x", 0 - (height / 2))
+			.attr("dy", "1em")
+			.style("text-anchor", "middle")
+			.text("PIB Acumulado");
+
+		svg.append("text")
+			.attr("transform", `translate(${width}, ${height / 2}) rotate(90)`)
+			.attr("dy", "1em")
+			.style("text-anchor", "middle")
+			.text("Muertes en Aviones");
 	}
 </script>
 
 <svelte:head>
-	<script src="https://code.highcharts.com/highcharts.js"></script>
-	<script src="https://code.highcharts.com/highcharts-more.js"></script>
-	<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+	<script src="https://d3js.org/d3.v7.min.js"></script>
 </svelte:head>
 
 <div class="container">

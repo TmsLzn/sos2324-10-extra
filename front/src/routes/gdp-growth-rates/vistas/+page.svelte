@@ -1,15 +1,7 @@
 <svelte:head>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/highcharts-more.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-    <script src="https://code.highcharts.com/modules/treemap.js"></script>
-    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
-
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </svelte:head>
-
-
 <script>
-
     import { onMount } from "svelte";
 
     let API_DATA = "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates";
@@ -23,16 +15,13 @@
                 createBubbleChart(meanGrowthRate(data));
                 createTreemapChart(meanGrowthRate(data));
             }
-
         } catch (error) {
             console.log(`Error fetching data: ${error}`);
         }
     }
 
-
     // Función asíncrona para cargar datos desde el servidor
     async function loadInitialGDP() {
-
         try {
             let response = await fetch(API_DATA + "/loadInitialData", {
                 method: "GET",
@@ -42,13 +31,12 @@
             console.log(`Status code: ${status}`);
             if (status === 200) {
                 await getGDP();
-            } 
-
+            }
         } catch (error) {
-            console.log(`Error loading initail GDP data: ${error}`)
+            console.log(`Error loading initail GDP data: ${error}`);
         }
-    }   
-    
+    }
+
     function meanGrowthRate(data) {
         const groupedData = data.reduce((acc, curr) => {
             if (!acc[curr.geo]) {
@@ -60,206 +48,133 @@
             return acc;
         }, {});
 
-        const averagedData = Object.keys(groupedData).map(country => {
+        const averagedData = Object.keys(groupedData).map((country) => {
             const { total2030, total2040, count } = groupedData[country];
             return {
                 geo: country,
                 growth_rate_2030: total2030 / count,
-                growth_rate_2040: total2040 / count
+                growth_rate_2040: total2040 / count,
             };
         });
 
         return averagedData;
     }
-    
 
-   
-    // Crear un gráfico de dispersión utilizando Highcharts
     function createBubbleChart(data) {
+        const margin = { top: 20, right: 30, bottom: 30, left: 70 };
+        const width = 800 - margin.left - margin.right;
+        const height = 600 - margin.top - margin.bottom;
 
-        const seriesData = data.map(entry => ({
-                x: entry.growth_rate_2030,
-                y: entry.growth_rate_2040,
-                name: entry.geo,
-                country: entry.geo // Si deseas mantener la propiedad 'country' como en tu ejemplo original
-        }));
+        const svg = d3
+            .select("#bubble-container")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        const scatterChart = Highcharts.chart('bubble-container', {
+        const x = d3
+            .scaleLinear()
+            .domain([0, d3.max(data, (d) => d.growth_rate_2030)])
+            .range([0, width]);
 
-            chart: {
-                type: 'bubble',
-                plotBorderWidth: 1,
-                zoomType: 'xy'
-            },
+        const y = d3
+            .scaleLinear()
+            .domain([0, d3.max(data, (d) => d.growth_rate_2040)])
+            .range([height, 0]);
 
-            legend: {
-                enabled: false
-            },
+        const r = d3
+            .scaleLinear()
+            .domain([0, d3.max(data, (d) => d.growth_rate_2030)])
+            .range([2, 20]);
 
-            title: {
-                text: 'Estimación de crecimiento en las próximas decadas'
-            },
+        svg.selectAll("circle")
+            .data(data)
+            .join("circle")
+            .attr("cx", (d) => x(d.growth_rate_2030))
+            .attr("cy", (d) => y(d.growth_rate_2040))
+            .attr("r", (d) => r(d.growth_rate_2030))
+            .attr("fill", "steelblue")
+            .attr("opacity", 0.5);
 
-            subtitle: {
-                text: 'Source: <a href="https://sos2324-10.appspot.com/api/v2/gdp-growth-rates">Gdp-growth-rates</a>'
-            },
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x))
+            .append("text")
+            .attr("x", width - margin.right)
+            .attr("y", -4)
+            .attr("fill", "#000")
+            .attr("font-weight", "bold")
+            .attr("text-anchor", "end")
+            .text("Crecimiento 2030");
 
-            accessibility: {
-                point: {
-                    valueDescriptionFormat: '{index}. {point.name}, 2030: {point.x}$, 2040: {point.y}$'
-                }
-            },
+        svg.append("g")
+            .call(d3.axisLeft(y))
+            .append("text")
+            .attr("y", 12)
+            .attr("fill", "#000")
+            .text("Crecimiento 2040");
 
-            xAxis: {
-                gridLineWidth: 1,
-                title: {
-                    text: 'Crecimiento 2030'
-                },
-                labels: {
-                    format: '{value} $'
-                },
-                plotLines: [{
-                    color: 'black',
-                    dashStyle: 'dot',
-                    width: 2,
-                    value: 65,
-                    label: {
-                        rotation: 0,
-                        y: 15,
-                        style: {
-                            fontStyle: 'italic'
-                        },
-                    },
-                    zIndex: 3
-                }],
-                accessibility: {
-                    rangeDescription: 'Range: 10000 to 100000 millions.'
-                }
-            },
-
-            yAxis: {
-                startOnTick: false,
-                endOnTick: false,
-                title: {
-                    text: 'Crecimiento 2040'
-                },
-                labels: {
-                    format: '{value} $'
-                },
-                maxPadding: 0.2,
-                plotLines: [{
-                    color: 'black',
-                    dashStyle: 'dot',
-                    width: 2,
-                    value: 50,
-                    label: {
-                        align: 'right',
-                        style: {
-                            fontStyle: 'italic'
-                        },
-                    },
-                    zIndex: 3
-                }],
-                accessibility: {
-                    rangeDescription: 'Range: 10000 to 100000 millions.'
-                }
-            },
-
-            tooltip: {
-                useHTML: true,
-                headerFormat: '<table>',
-                pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
-                    '<tr><th>Crecimiento 2030:</th><td>{point.x} millions</td></tr>' +
-                    '<tr><th>Crecimiento 2040:</th><td>{point.y} millions</td></tr>',
-                footerFormat: '</table>',
-                followPointer: true
-            },
-
-            plotOptions: {
-                series: {
-                    dataLabels: {
-                        enabled: true,
-                        format: '{point.name}'
-                    }
-                }
-            },
-
-
-            series: [{
-                data: seriesData,
-                colorByPoint: true
-            }]
-
-        });
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", 10)
+            .attr("text-anchor", "middle")
+            .text("Estimación de crecimiento en las próximas décadas");
     }
-
 
     async function createTreemapChart(data) {
-        let points = [];
-        let regionI = 0;
+        const margin = { top: 20, right: 30, bottom: 30, left: 70 };
+        const width = 800 - margin.left - margin.right;
+        const height = 600 - margin.top - margin.bottom;
 
-        data.forEach(entry => {
-            points.push({
-                id: `id_${regionI}`,
-                name: entry.geo,
-                value: entry.growth_rate_2030
-            });
-            regionI++;
-        });
+        const svg = d3
+            .select("#treemap-container")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        Highcharts.chart('treemap-container', {
-            series: [{
-                name: 'Regions',
-                type: 'treemap',
-                layoutAlgorithm: 'squarified',
-                allowDrillToNode: true,
-                animationLimit: 1000,
-                dataLabels: {
-                    enabled: false
-                },
-                levels: [{
-                    level: 1,
-                    dataLabels: {
-                        enabled: true
-                    },
-                    borderWidth: 3,
-                    levelIsConstant: false
-                }, {
-                    level: 1,
-                    dataLabels: {
-                        style: {
-                            fontSize: '14px'
-                        }
-                    }
-                }],
-                accessibility: {
-                    exposeAsGroupOnly: true
-                },
-                data: points,
-                colorByPoint: true
-            }],
-            subtitle: {
-                text: 'Source: <a href="https://sos2324-10.appspot.com/api/v2/gdp-growth-rates">Gdp-growth-rates</a>',
-                align: 'left'
-            },
-            title: {
-                text: 'Growth Rate 2030 by Region',
-                align: 'left'
-            }
-        });
+        const treemap = d3
+            .treemap()
+            .size([width, height])
+            .padding(1)
+            .round(true);
+
+        const root = d3
+            .hierarchy({ children: data })
+            .sum((d) => d.value)
+            .sort((a, b) => b.value - a.value);
+
+        treemap(root);
+
+        const leaf = svg
+            .selectAll("g")
+            .data(root.leaves())
+            .join("g")
+            .attr("transform", (d) => `translate(${d.x0},${d.y0})`);
+
+        leaf.append("rect")
+            .attr("fill", "steelblue")
+            .attr("width", (d) => d.x1 - d.x0)
+            .attr("height", (d) => d.y1 - d.y0);
+
+        leaf.append("text")
+            .attr("fill", "white")
+            .attr("x", 3)
+            .attr("y", 13)
+            .text((d) => d.data.name)
+            .style("font-size", "12px")
+            .style("font-weight", "bold");
     }
-
-    
-            
-
 
     onMount(async () => {
         await loadInitialGDP();
         await getGDP();
     });
-
 </script>
 
+
 <div id="bubble-container"></div>
-<br>
+<br />
 <div id="treemap-container"></div>
