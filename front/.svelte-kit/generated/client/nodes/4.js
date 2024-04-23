@@ -1,0 +1,1 @@
+export { default as component } from "../../../../src/routes/gdp-growth-rates/[geo]/[time_period]/+page.svelte";

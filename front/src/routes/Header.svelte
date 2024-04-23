@@ -16,20 +16,6 @@
 			<a href="/gdp-growth-rates/vistas">Vista</a>
 		</div>
 	</div>
-	<div class="dropdown">
-		<button class="dropbtn">cars-by-motor</button>
-		<div class="dropdown-content">
-			<a href="/cars-by-motor">Tabla</a>
-			<a href="/cars-by-motor/vistas">Vista</a>
-		</div>
-	</div>
-	<div class="dropdown">
-		<button class="dropbtn">tourisms-per-age</button>
-		<div class="dropdown-content">
-			<a href="/tourisms-per-age">Tabla</a>
-			<a href="/tourisms-per-age/vistas">Vista</a>
-		</div>
-	</div>
 </nav>
 
 <style>
