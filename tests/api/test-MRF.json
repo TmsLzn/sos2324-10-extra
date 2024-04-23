@@ -1,0 +1,720 @@
+{
+	"info": {
+		"_postman_id": "7bb2cee8-54b8-414b-a752-bfc79c9b57eb",
+		"name": "MRF WEB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32965505",
+		"_collection_link": "https://warped-trinity-19905.postman.co/workspace/SOS2324-10~6041b4cf-1144-4aa6-8878-7c39fb610ff4/collection/32965505-7bb2cee8-54b8-414b-a752-bfc79c9b57eb?action=share&source=collection_link&creator=32965505"
+	},
+	"item": [
+		{
+			"name": "200 - OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates/loadInitialData",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates",
+						"loadInitialData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TODOS DATOS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DATO CONCRETO",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FILTRO/PAG",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates?geo=belgium&limit=1&offset=1",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates"
+					],
+					"query": [
+						{
+							"key": "geo",
+							"value": "belgium"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						},
+						{
+							"key": "offset",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "404 - NOT FOUND",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates?geo=letonia",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates"
+					],
+					"query": [
+						{
+							"key": "geo",
+							"value": "letonia"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "201 - CREATED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 201\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(201);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 40,\r\n    \"frequency\": \"a\",\r\n    \"unit\": \"clv_pch_pre\",\r\n    \"na_item\": \"b1gq\",\r\n    \"geo\": \"belgium\",\r\n    \"time_period\": 2020,\r\n    \"obs_value\": -5.3,\r\n    \"growth_rate_2030\": 71573,\r\n    \"growth_rate_2040\": 81533\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "400 - BAD REQUEST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(400);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 44,\r\n    //\"frequency\": \"a\",\r\n    //\"unit\": \"clv_pch_pre\",\r\n    //\"na_item\": \"b1gq\",\r\n    //\"geo\": \"belgium\",\r\n    //\"time_period\": 2020,\r\n    \"obs_value\": -5.3,\r\n    \"growth_rate_2030\": 71573,\r\n    \"growth_rate_2040\": 81533\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "405 - NOT ALLOWED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 405\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(405);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates/austria",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates",
+						"austria"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "409 - CONFLICT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 409\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(409);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 40,\r\n    \"frequency\": \"a\",\r\n    \"unit\": \"clv_pch_pre\",\r\n    \"na_item\": \"b1gq\",\r\n    \"geo\": \"belgium\",\r\n    \"time_period\": 2020,\r\n    \"obs_value\": -5.3,\r\n    \"growth_rate_2030\": 71573,\r\n    \"growth_rate_2040\": 81533\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "200 - OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"frequency\": \"a\",\r\n    \"unit\": \"clv_pch_pre\",\r\n    \"na_item\": \"b1gq\",\r\n    \"geo\": \"belgium\",\r\n    \"time_period\": 2020,\r\n    \"obs_value\": -5.3,\r\n    \"growth_rate_2030\": 11111,\r\n    \"growth_rate_2040\": 11111\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates/belgium/2020",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates",
+						"belgium",
+						"2020"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "400 - MISSING FIELDS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(400);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    //\"frequency\": \"a\",\r\n    \"unit\": \"clv_pch_pre\",\r\n    \"na_item\": \"b1gq\",\r\n    \"geo\": \"belgium\",\r\n    \"time_period\": 2020,\r\n    \"obs_value\": -5.3,\r\n    \"growth_rate_2030\": 11111,\r\n    \"growth_rate_2040\": 11111\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates/belgium/2020",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates",
+						"belgium",
+						"2020"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "400 - NO MATCH",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(400);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"frequency\": \"a\",\r\n    \"unit\": \"clv_pch_pre\",\r\n    \"na_item\": \"b1gq\",\r\n    \"geo\": \"belgium\",\r\n    \"time_period\": 2020,\r\n    \"obs_value\": -5.3,\r\n    \"growth_rate_2030\": 11111,\r\n    \"growth_rate_2040\": 11111\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates/belgium/2021",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates",
+						"belgium",
+						"2021"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "405 - NOT ALLOWED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 405\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(405);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 5,\r\n    \"frequency\": \"a\",\r\n    \"unit\": \"clv_pch_pre\",\r\n    \"na_item\": \"b1gq\",\r\n    \"geo\": \"belgium\",\r\n    \"time_period\": 2020,\r\n    \"obs_value\": -5.3,\r\n    \"growth_rate_2030\": 71573,\r\n    \"growth_rate_2040\": 81533\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "200 - RECURSO CONCRETO",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates/austria/2020",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates",
+						"austria",
+						"2020"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "400 - BAD REQUEST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 400\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(400);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates/austria/asdafas",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates",
+						"austria",
+						"asdafas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "404 - NOT FOUND",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates/austria/2011",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates",
+						"austria",
+						"2011"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "200 - OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates",
+					"protocol": "https",
+					"host": [
+						"sos2324-10",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"gdp-growth-rates"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
