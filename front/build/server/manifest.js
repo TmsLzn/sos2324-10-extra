@@ -10,19 +10,18 @@ return {
 	assets: new Set(["favicon.png"]),
 	mimeTypes: {".png":"image/png"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.DGe70D85.js","app":"_app/immutable/entry/app.gJaNLSTE.js","imports":["_app/immutable/entry/start.DGe70D85.js","_app/immutable/chunks/entry.B-0cY56T.js","_app/immutable/chunks/scheduler.Bmg8oFKD.js","_app/immutable/chunks/index.D_GRTHN4.js","_app/immutable/entry/app.gJaNLSTE.js","_app/immutable/chunks/scheduler.Bmg8oFKD.js","_app/immutable/chunks/index.r7FLvRHx.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
+		client: {"start":"_app/immutable/entry/start.DlD2AtQe.js","app":"_app/immutable/entry/app.DGpR-HxD.js","imports":["_app/immutable/entry/start.DlD2AtQe.js","_app/immutable/chunks/entry.C_08jOh-.js","_app/immutable/chunks/scheduler.BfJEPAwo.js","_app/immutable/chunks/index._VMp3gXv.js","_app/immutable/entry/app.DGpR-HxD.js","_app/immutable/chunks/scheduler.BfJEPAwo.js","_app/immutable/chunks/index.CbF2QnM9.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
 		nodes: [
-			__memo(() => import('./chunks/0-CTWSwHbn.js')),
-			__memo(() => import('./chunks/1-D59yqY_H.js')),
-			__memo(() => import('./chunks/2-oZtAySVV.js')),
-			__memo(() => import('./chunks/3-XD9167P_.js')),
-			__memo(() => import('./chunks/4-CWUxZmpY.js')),
-			__memo(() => import('./chunks/5-ie3hYkwS.js')),
-			__memo(() => import('./chunks/6-CDIOqaAb.js')),
-			__memo(() => import('./chunks/7-o5vXaKhM.js')),
-			__memo(() => import('./chunks/8-6ysvsixa.js')),
-			__memo(() => import('./chunks/9-DEozup1y.js')),
-			__memo(() => import('./chunks/10-DJ1w5LcK.js'))
+			__memo(() => import('./chunks/0-D0vTDCCR.js')),
+			__memo(() => import('./chunks/1-CmRhM1nK.js')),
+			__memo(() => import('./chunks/2-B5gmCNXU.js')),
+			__memo(() => import('./chunks/3-CbrEBFT9.js')),
+			__memo(() => import('./chunks/4-CJWX6HVk.js')),
+			__memo(() => import('./chunks/5-nIltUy8D.js')),
+			__memo(() => import('./chunks/6-CFTdhJC2.js')),
+			__memo(() => import('./chunks/7-ClDlLs5_.js')),
+			__memo(() => import('./chunks/8-BohznqM-.js')),
+			__memo(() => import('./chunks/9-CeXikhpm.js'))
 		],
 		routes: [
 			{
@@ -33,22 +32,15 @@ return {
 				endpoint: null
 			},
 			{
-				id: "/cars-by-motor",
-				pattern: /^\/cars-by-motor\/?$/,
+				id: "/gdp-growth-rates",
+				pattern: /^\/gdp-growth-rates\/?$/,
 				params: [],
 				page: { layouts: [0,], errors: [1,], leaf: 3 },
 				endpoint: null
 			},
 			{
-				id: "/cars-by-motor/[geo]/[time_period]",
-				pattern: /^\/cars-by-motor\/([^/]+?)\/([^/]+?)\/?$/,
-				params: [{"name":"geo","optional":false,"rest":false,"chained":false},{"name":"time_period","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,], errors: [1,], leaf: 4 },
-				endpoint: null
-			},
-			{
-				id: "/gdp-growth-rates",
-				pattern: /^\/gdp-growth-rates\/?$/,
+				id: "/gdp-growth-rates/vistas",
+				pattern: /^\/gdp-growth-rates\/vistas\/?$/,
 				params: [],
 				page: { layouts: [0,], errors: [1,], leaf: 5 },
 				endpoint: null
@@ -57,35 +49,35 @@ return {
 				id: "/gdp-growth-rates/[geo]/[time_period]",
 				pattern: /^\/gdp-growth-rates\/([^/]+?)\/([^/]+?)\/?$/,
 				params: [{"name":"geo","optional":false,"rest":false,"chained":false},{"name":"time_period","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,], errors: [1,], leaf: 6 },
-				endpoint: null
-			},
-			{
-				id: "/tourisms-per-age",
-				pattern: /^\/tourisms-per-age\/?$/,
-				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 7 },
-				endpoint: null
-			},
-			{
-				id: "/tourisms-per-age/[geo]/[time_period]",
-				pattern: /^\/tourisms-per-age\/([^/]+?)\/([^/]+?)\/?$/,
-				params: [{"name":"geo","optional":false,"rest":false,"chained":false},{"name":"time_period","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,], errors: [1,], leaf: 8 },
+				page: { layouts: [0,], errors: [1,], leaf: 4 },
 				endpoint: null
 			},
 			{
 				id: "/vehicles-stock",
 				pattern: /^\/vehicles-stock\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 9 },
+				page: { layouts: [0,], errors: [1,], leaf: 6 },
+				endpoint: null
+			},
+			{
+				id: "/vehicles-stock/vistas",
+				pattern: /^\/vehicles-stock\/vistas\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 8 },
 				endpoint: null
 			},
 			{
 				id: "/vehicles-stock/[geo]/[year]",
 				pattern: /^\/vehicles-stock\/([^/]+?)\/([^/]+?)\/?$/,
 				params: [{"name":"geo","optional":false,"rest":false,"chained":false},{"name":"year","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,], errors: [1,], leaf: 10 },
+				page: { layouts: [0,], errors: [1,], leaf: 7 },
+				endpoint: null
+			},
+			{
+				id: "/vista-grupal",
+				pattern: /^\/vista-grupal\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 9 },
 				endpoint: null
 			}
 		],

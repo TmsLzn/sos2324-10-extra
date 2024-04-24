@@ -1,10 +1,23 @@
 <svelte:head>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </svelte:head>
-<script>
-    import { onMount } from "svelte";
 
-    let API_DATA = "https://sos2324-10.appspot.com/api/v2/gdp-growth-rates";
+<script>
+    import { onMount } from 'svelte';
+    import { dev } from '$app/environment';
+    import * as d3 from 'd3';
+    import { io } from 'socket.io-client';
+
+    let API_DATA = "/api/v2/gdp-growth-rates";
+    let socket;
+    let newData = {};
+
+    // Conexión al servidor socket.io
+    if (process.env.NODE_ENV === 'development') {
+        socket = io('http://localhost:8080');
+    } else {
+        socket = io(); // Assuming socket.io server is running on the same host
+    }
 
     async function getGDP() {
         try {
@@ -12,15 +25,33 @@
             const data = await res.json();
             console.log(data);
             if (data.length > 0) {
-                createBubbleChart(meanGrowthRate(data));
-                createTreemapChart(meanGrowthRate(data));
+                createScatterChart(data);
+                createBarChart(data);
+                //updateCharts();
             }
         } catch (error) {
             console.log(`Error fetching data: ${error}`);
         }
     }
 
-    // Función asíncrona para cargar datos desde el servidor
+    // Función para enviar nuevos datos al servidor
+    async function submitData() {
+        try {
+            // Envía los nuevos datos al servidor a través de socket.io
+            socket.emit('newData', newData);
+            newData = {}; // Limpia el objeto newData después de enviar los datos
+        } catch (error) {
+            console.log(`Error sending data: ${error}`);
+        }
+    }
+
+    // Escuchar eventos de socket.io para recibir datos actualizados
+    socket.on('dataUpdated', async (updatedData) => {
+        console.log('Received updated data:', updatedData);
+        updateCharts(updatedData); // Actualizar las gráficas con los datos actualizados
+    });
+
+    // Función para cargar los datos iniciales desde el servidor
     async function loadInitialGDP() {
         try {
             let response = await fetch(API_DATA + "/loadInitialData", {
@@ -33,148 +64,236 @@
                 await getGDP();
             }
         } catch (error) {
-            console.log(`Error loading initail GDP data: ${error}`);
+            console.log(`Error loading initial GDP data: ${error}`);
         }
     }
 
-    function meanGrowthRate(data) {
-        const groupedData = data.reduce((acc, curr) => {
-            if (!acc[curr.geo]) {
-                acc[curr.geo] = { total2030: 0, total2040: 0, count: 0 };
-            }
-            acc[curr.geo].total2030 += curr.growth_rate_2030;
-            acc[curr.geo].total2040 += curr.growth_rate_2040;
-            acc[curr.geo].count++;
-            return acc;
-        }, {});
+    // Función para actualizar las gráficas con los datos proporcionados
+    async function updateCharts(data) {
+        try {
+            // Limpiar las gráficas existentes
+            d3.select("#scatter-chart").selectAll("*").remove();
+            d3.select("#bar-chart").selectAll("*").remove();
 
-        const averagedData = Object.keys(groupedData).map((country) => {
-            const { total2030, total2040, count } = groupedData[country];
-            return {
-                geo: country,
-                growth_rate_2030: total2030 / count,
-                growth_rate_2040: total2040 / count,
-            };
-        });
-
-        return averagedData;
+            // Crear nuevas gráficas con los datos actualizados
+            createScatterChart(data);
+            createBarChart(data);
+        } catch (error) {
+            console.log(`Error updating charts: ${error}`);
+        }
     }
 
-    function createBubbleChart(data) {
-        const margin = { top: 20, right: 30, bottom: 30, left: 70 };
-        const width = 800 - margin.left - margin.right;
-        const height = 600 - margin.top - margin.bottom;
+    function createScatterChart(data) {
+            // Remove any existing SVG elements
+            d3.select("#scatter-chart").selectAll("*").remove();
 
-        const svg = d3
-            .select("#bubble-container")
+            const margin = { top: 50, right: 0, bottom: 30, left: 70 };
+            const width = 600 - margin.left - margin.right;
+            const height = 400 - margin.top - margin.bottom;
+
+
+            const svg = d3.select("#scatter-chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+            // Ajustar los dominios de las escalas con espacio adicional
+            const xPadding = 0.1 * (d3.max(data, d => d.growth_rate_2030) - d3.min(data, d => d.growth_rate_2030));
+            const yPadding = 0.1 * (d3.max(data, d => d.growth_rate_2040) - d3.min(data, d => d.growth_rate_2040));
+
+            const xScale = d3.scaleLinear()
+                .domain([d3.min(data, d => d.growth_rate_2030) - xPadding, d3.max(data, d => d.growth_rate_2030) + xPadding])
+                .range([0, width]);
+
+            const yScale = d3.scaleLinear()
+                .domain([d3.min(data, d => d.growth_rate_2040) - yPadding, d3.max(data, d => d.growth_rate_2040) + yPadding])
+                .range([height, 0]);
+
+            // Create axis
+            const xAxis = d3.axisBottom(xScale);
+            const yAxis = d3.axisLeft(yScale);
+
+            svg.append("g")
+                .attr("transform", `translate(0, ${height})`)
+                .call(xAxis);
+
+            svg.append("g")
+                .call(yAxis);
+
+            // Group data by country and calculate the mean growth rates
+            const groupedData = d3.group(data, d => d.geo);
+            const aggregatedData = Array.from(groupedData, ([country, values]) => ({
+                geo: country,
+                growth_rate_2030: d3.mean(values, d => d.growth_rate_2030),
+                growth_rate_2040: d3.mean(values, d => d.growth_rate_2040)
+            }));
+
+            // Create points
+            svg.selectAll("circle")
+                .data(aggregatedData)
+                .enter()
+                .append("circle")
+                .attr("cx", d => xScale(d.growth_rate_2030))
+                .attr("cy", d => yScale(d.growth_rate_2040))
+                .attr("r", 4)
+                .attr("fill", "steelblue");
+
+            // Add country labels
+            svg.selectAll(".country-label")
+                .data(aggregatedData)
+                .enter()
+                .append("text")
+                .attr("class", "country-label")
+                .attr("x", d => xScale(d.growth_rate_2030)) // Adjust the position for better visibility
+                .attr("y", d => yScale(d.growth_rate_2040) + 3) // Adjust the position for better visibility
+                .text(d => d.geo)
+                .style("font-size", "10px") // Adjust font size as needed
+                .style("fill", "black") // Adjust font color as needed
+                .style("text-anchor", "middle"); // Align text to the middle of the point
+        }
+
+    function createBarChart(data) {
+        // Remove any existing SVG elements
+        d3.select("#bar-chart").selectAll("*").remove();
+
+        const margin = { top: 50, right: 0, bottom: 30, left: 70 };
+        const width = 600 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+
+        const svg = d3.select("#bar-chart")
             .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
+            .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-        const x = d3
-            .scaleLinear()
-            .domain([0, d3.max(data, (d) => d.growth_rate_2030)])
-            .range([0, width]);
+        // Create scales
+        const xScale = d3.scaleBand()
+            .domain(data.map(d => d.geo))
+            .range([0, width])
+            .padding(0.1);
 
-        const y = d3
-            .scaleLinear()
-            .domain([0, d3.max(data, (d) => d.growth_rate_2040)])
+        const yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.growth_rate_2030)])
+            .nice()
             .range([height, 0]);
 
-        const r = d3
-            .scaleLinear()
-            .domain([0, d3.max(data, (d) => d.growth_rate_2030)])
-            .range([2, 20]);
+        // Create axis
+        const xAxis = d3.axisBottom(xScale);
+        const yAxis = d3.axisLeft(yScale);
 
-        svg.selectAll("circle")
+        svg.append("g")
+            .attr("transform", `translate(0, ${height})`)
+            .call(xAxis)
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+
+        svg.append("g")
+            .call(yAxis);
+
+        // Create bars
+        svg.selectAll("rect")
             .data(data)
-            .join("circle")
-            .attr("cx", (d) => x(d.growth_rate_2030))
-            .attr("cy", (d) => y(d.growth_rate_2040))
-            .attr("r", (d) => r(d.growth_rate_2030))
-            .attr("fill", "steelblue")
-            .attr("opacity", 0.5);
-
-        svg.append("g")
-            .attr("transform", `translate(0,${height})`)
-            .call(d3.axisBottom(x))
-            .append("text")
-            .attr("x", width - margin.right)
-            .attr("y", -4)
-            .attr("fill", "#000")
-            .attr("font-weight", "bold")
-            .attr("text-anchor", "end")
-            .text("Crecimiento 2030");
-
-        svg.append("g")
-            .call(d3.axisLeft(y))
-            .append("text")
-            .attr("y", 12)
-            .attr("fill", "#000")
-            .text("Crecimiento 2040");
-
-        svg.append("text")
-            .attr("x", width / 2)
-            .attr("y", 10)
-            .attr("text-anchor", "middle")
-            .text("Estimación de crecimiento en las próximas décadas");
-    }
-
-    async function createTreemapChart(data) {
-        const margin = { top: 20, right: 30, bottom: 30, left: 70 };
-        const width = 800 - margin.left - margin.right;
-        const height = 600 - margin.top - margin.bottom;
-
-        const svg = d3
-            .select("#treemap-container")
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
-
-        const treemap = d3
-            .treemap()
-            .size([width, height])
-            .padding(1)
-            .round(true);
-
-        const root = d3
-            .hierarchy({ children: data })
-            .sum((d) => d.value)
-            .sort((a, b) => b.value - a.value);
-
-        treemap(root);
-
-        const leaf = svg
-            .selectAll("g")
-            .data(root.leaves())
-            .join("g")
-            .attr("transform", (d) => `translate(${d.x0},${d.y0})`);
-
-        leaf.append("rect")
-            .attr("fill", "steelblue")
-            .attr("width", (d) => d.x1 - d.x0)
-            .attr("height", (d) => d.y1 - d.y0);
-
-        leaf.append("text")
-            .attr("fill", "white")
-            .attr("x", 3)
-            .attr("y", 13)
-            .text((d) => d.data.name)
-            .style("font-size", "12px")
-            .style("font-weight", "bold");
+            .enter()
+            .append("rect")
+            .attr("x", d => xScale(d.geo))
+            .attr("y", d => yScale(d.growth_rate_2030))
+            .attr("width", xScale.bandwidth())
+            .attr("height", d => height - yScale(d.growth_rate_2030))
+            .attr("fill", "steelblue");
     }
 
     onMount(async () => {
         await loadInitialGDP();
         await getGDP();
     });
+
 </script>
 
 
-<div id="bubble-container"></div>
-<br />
-<div id="treemap-container"></div>
+
+<div class="chart-container">
+   
+
+    <div class="graph">
+        <div id="scatter-chart"></div>
+    </div>
+
+
+    <div class="graph">
+        <div id="bar-chart"></div>
+    </div>
+</div>
+
+<div class="form">
+    <div id="form_Create">
+        <form on:submit|preventDefault="{submitData}">
+            <label>
+                Frequency:
+                <input type="text" bind:value="{newData.frequency}">
+            </label><br>
+            <label>
+                Unit:
+                <input type="text" bind:value="{newData.unit}">
+            </label><br>
+            <label>
+                NA Item:
+                <input type="text" bind:value="{newData.na_item}">
+            </label><br>
+            <label>
+                Geo:
+                <input type="text" bind:value="{newData.geo}">
+            </label><br>
+            <label>
+                Time Period:
+                <input type="number" bind:value="{newData.time_period}">
+            </label><br>
+            <label>
+                Observation Value:
+                <input type="number" bind:value="{newData.obs_value}">
+            </label><br>
+            <label>
+                Growth Rate 2030:
+                <input type="number" bind:value="{newData.growth_rate_2030}">
+            </label><br>
+            <label>
+                Growth Rate 2040:
+                <input type="number" bind:value="{newData.growth_rate_2040}">
+            </label><br>
+            <button type="submit" on:click="{submitData}">Enviar Datos</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .chart-container {
+        width: 100%;
+        height: 100%;
+        background-color: #89deff;
+        color: #333;
+        border: 1px solid #89deff;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .graph {
+        width: 100%;
+        max-width: 800px;
+        margin-top: 20px;
+        background-color: #ffffff;
+        border: 1px solid #a4caef;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+  
+</style>

@@ -1,0 +1,180 @@
+{
+  ".svelte-kit/generated/server/internal.js": {
+    "file": "internal.js",
+    "name": "internal",
+    "src": ".svelte-kit/generated/server/internal.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js"
+    ]
+  },
+  "_Theme.svelte_svelte_type_style_lang.js": {
+    "file": "chunks/Theme.svelte_svelte_type_style_lang.js",
+    "name": "Theme.svelte_svelte_type_style_lang",
+    "imports": [
+      "_index.js"
+    ],
+    "css": [
+      "_app/immutable/assets/Theme.BBcq8iz_.css"
+    ]
+  },
+  "_exports.js": {
+    "file": "chunks/exports.js",
+    "name": "exports"
+  },
+  "_index.js": {
+    "file": "chunks/index.js",
+    "name": "index",
+    "imports": [
+      "_ssr.js"
+    ]
+  },
+  "_internal.js": {
+    "file": "chunks/internal.js",
+    "name": "internal",
+    "imports": [
+      "_ssr.js"
+    ]
+  },
+  "_ssr.js": {
+    "file": "chunks/ssr.js",
+    "name": "ssr"
+  },
+  "_stores.js": {
+    "file": "chunks/stores.js",
+    "name": "stores",
+    "imports": [
+      "_ssr.js",
+      "_exports.js"
+    ]
+  },
+  "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
+    "file": "index.js",
+    "name": "index",
+    "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js",
+      "_exports.js",
+      "_index.js"
+    ]
+  },
+  "src/routes/+error.svelte": {
+    "file": "entries/pages/_error.svelte.js",
+    "name": "entries/pages/_error.svelte",
+    "src": "src/routes/+error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js"
+    ]
+  },
+  "src/routes/+layout.svelte": {
+    "file": "entries/pages/_layout.svelte.js",
+    "name": "entries/pages/_layout.svelte",
+    "src": "src/routes/+layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js",
+      "_Theme.svelte_svelte_type_style_lang.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_layout.BsykHxlb.css"
+    ]
+  },
+  "src/routes/+page.svelte": {
+    "file": "entries/pages/_page.svelte.js",
+    "name": "entries/pages/_page.svelte",
+    "src": "src/routes/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js"
+    ]
+  },
+  "src/routes/gdp-growth-rates/+page.svelte": {
+    "file": "entries/pages/gdp-growth-rates/_page.svelte.js",
+    "name": "entries/pages/gdp-growth-rates/_page.svelte",
+    "src": "src/routes/gdp-growth-rates/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js",
+      "_Theme.svelte_svelte_type_style_lang.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.BbY0qhgi.css"
+    ]
+  },
+  "src/routes/gdp-growth-rates/[geo]/[time_period]/+page.svelte": {
+    "file": "entries/pages/gdp-growth-rates/_geo_/_time_period_/_page.svelte.js",
+    "name": "entries/pages/gdp-growth-rates/_geo_/_time_period_/_page.svelte",
+    "src": "src/routes/gdp-growth-rates/[geo]/[time_period]/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js",
+      "_stores.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.Dowb7Xur.css"
+    ]
+  },
+  "src/routes/gdp-growth-rates/vistas/+page.svelte": {
+    "file": "entries/pages/gdp-growth-rates/vistas/_page.svelte.js",
+    "name": "entries/pages/gdp-growth-rates/vistas/_page.svelte",
+    "src": "src/routes/gdp-growth-rates/vistas/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.BlsuGng2.css"
+    ]
+  },
+  "src/routes/vehicles-stock/+page.svelte": {
+    "file": "entries/pages/vehicles-stock/_page.svelte.js",
+    "name": "entries/pages/vehicles-stock/_page.svelte",
+    "src": "src/routes/vehicles-stock/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.sjAGB_i9.css"
+    ]
+  },
+  "src/routes/vehicles-stock/[geo]/[year]/+page.svelte": {
+    "file": "entries/pages/vehicles-stock/_geo_/_year_/_page.svelte.js",
+    "name": "entries/pages/vehicles-stock/_geo_/_year_/_page.svelte",
+    "src": "src/routes/vehicles-stock/[geo]/[year]/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js",
+      "_stores.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.DjWgd_kj.css"
+    ]
+  },
+  "src/routes/vehicles-stock/vistas/+page.svelte": {
+    "file": "entries/pages/vehicles-stock/vistas/_page.svelte.js",
+    "name": "entries/pages/vehicles-stock/vistas/_page.svelte",
+    "src": "src/routes/vehicles-stock/vistas/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.D0M44bfX.css"
+    ]
+  },
+  "src/routes/vista-grupal/+page.svelte": {
+    "file": "entries/pages/vista-grupal/_page.svelte.js",
+    "name": "entries/pages/vista-grupal/_page.svelte",
+    "src": "src/routes/vista-grupal/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.DExG7QLg.css"
+    ]
+  }
+}
